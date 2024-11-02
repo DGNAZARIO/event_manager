@@ -1,0 +1,17 @@
+<!-- events/templates/events/detalhes_evento.html -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ evento.nome }}</title>
+</head>
+<body>
+    <h1>{{ evento.nome }}</h1>
+    <p><strong>Data de Início:</strong> {{ evento.data_inicio }}</p>
+    <p><strong>Data de Fim:</strong> {{ evento.data_fim }}</p>
+    <p><strong>Descrição:</strong> {{ evento.descricao }}</p>
+    <p><strong>Local:</strong> {{ evento.local }}</p>
+    <a href="{% url 'lista_eventos' %}">Voltar para a lista</a>
+</body>
+</html>
