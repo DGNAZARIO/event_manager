@@ -1,5 +1,6 @@
-from django import forms
 from .models import Inscricao
+from django import forms
+from .models import Event
 
 class InscricaoForm(forms.ModelForm):
     class Meta:
@@ -13,3 +14,18 @@ class InscricaoForm(forms.ModelForm):
 
         if Inscricao.objects.filter(evento=evento, email_participante=email).exists():
             raise forms.ValidationError("Este e-mail já está inscrito para este evento.")
+
+
+class EventForm:
+
+
+    class EventForm(forms.ModelForm):
+        class Meta:
+            model = Event
+            fields = ['name', 'start_date', 'end_date', 'description', 'location']
+
+    def is_valid(self):
+        pass
+
+    def save(self, commit):
+        pass
