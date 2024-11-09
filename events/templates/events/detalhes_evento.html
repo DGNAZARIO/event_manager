@@ -1,38 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>{{ evento.nome }}</title>
+    <title>Detalhes do Evento</title>
 </head>
 <body>
     <h1>{{ evento.nome }}</h1>
-    <p><strong>Data de Início:</strong> {{ evento.data_inicio }}</p>
-    <p><strong>Data de Fim:</strong> {{ evento.data_fim }}</p>
+    <p><strong>Data de Início:</strong> {{ evento.data_inicio|date:"d/m/Y H:i" }}</p>
+    <p><strong>Data de Fim:</strong> {{ evento.data_fim|date:"d/m/Y H:i" }}</p>
     <p><strong>Descrição:</strong> {{ evento.descricao }}</p>
     <p><strong>Local:</strong> {{ evento.local }}</p>
 
-    <h2>Inscreva-se para o evento</h2>
+    <h2>Inscreva-se neste evento</h2>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Inscrever-se</button>
     </form>
 
-    {% if form.errors %}
-        <ul>
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <h2>Inscrições</h2>
+    <ul>
+        {% for inscricao in inscricoes %}
+            <li>{{ inscricao.nome_participante }} - {{ inscricao.email_participante }}</li>
+        {% endfor %}
+    </ul>
 
-    <a href="{% url 'lista_eventos' %}">Voltar para a lista</a>
-
-
+    <a href="{% url 'lista_eventos' %}">Voltar para a lista de eventos</a>
 </body>
 </html>
+

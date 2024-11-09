@@ -18,14 +18,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import RedirectView  # Correção: certifique-se de que RedirectView está importado
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('events/', include('events.urls')),
-    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
-    path('', RedirectView.as_view(url='/events/')),  # Redireciona a página inicial para a lista de eventos
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', RedirectView.as_view(url='/events/')),
 ]
 
 

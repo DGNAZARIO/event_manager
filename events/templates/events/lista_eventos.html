@@ -1,7 +1,5 @@
-<!-- events/templates/events/lista_eventos.html -->
-
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Lista de Eventos</title>
@@ -13,6 +11,7 @@
             <li>
                 <a href="{% url 'detalhes_evento' evento.id %}">{{ evento.nome }}</a>
                 - {{ evento.data_inicio }} a {{ evento.data_fim }}
+
             </li>
         {% empty %}
             <li>Nenhum evento cadastrado.</li>

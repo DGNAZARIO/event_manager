@@ -117,8 +117,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-LOGIN_REDIRECT_URL = 'event_list'
+LOGIN_REDIRECT_URL = '/events/'
 LOGOUT_REDIRECT_URL = 'login'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.seuprovedor.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'seu_email@example.com'
+EMAIL_HOST_PASSWORD = 'sua_senha'
+DEFAULT_FROM_EMAIL = 'seu_email@example.com'
+
 
 
 # Default primary key field type

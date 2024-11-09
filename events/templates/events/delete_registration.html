@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cancelar Inscrição</title>
+</head>
+<body>
+    <h2>Cancelar Inscrição</h2>
+    <p>Tem certeza de que deseja cancelar sua inscrição para o evento "{{ registration.event.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar Cancelamento</button>
+    </form>
+    <a href="{% url 'detalhes_evento' registration.event.id %}">Voltar para o evento</a>
+</body>
+</html>
