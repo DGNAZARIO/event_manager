@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Inscrições</title>
+</head>
+<body>
+    <h2>Relatório de Inscrições</h2>
+    <table border="1">
+        <tr>
+            <th>Evento</th>
+            <th>Total de Inscrições</th>
+        </tr>
+        {% for item in relatorio %}
+        <tr>
+            <td>{{ item.evento }}</td>
+            <td>{{ item.total_inscricoes }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">Nenhum dado disponível.</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="?exportar=1">Exportar para CSV</a>
+</body>
+</html>

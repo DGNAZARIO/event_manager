@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrições</title>
+</head>
+<body>
+    <h2>Filtrar Inscrições</h2>
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <h2>Lista de Inscrições</h2>
+    <table border="1">
+        <tr>
+            <th>Participante</th>
+            <th>Evento</th>
+            <th>Data de Inscrição</th>
+        </tr>
+        {% for inscricao in inscricoes %}
+        <tr>
+            <td>{{ inscricao.participante }}</td>
+            <td>{{ inscricao.evento.nome }}</td>
+            <td>{{ inscricao.data_inscricao|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Nenhuma inscrição encontrada.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

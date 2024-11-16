@@ -1,14 +1,33 @@
-from .views import lista_eventos, detalhes_evento
 from django.urls import path
-from . import views
+from .views import (
+    lista_eventos,
+    detalhes_evento,
+    create_event,
+    edit_event,
+    deletar_evento,
+    listar_inscricoes,
+    relatorio_inscricoes,
+    exportar_inscricoes_csv,
+    edit_registration,
+    delete_registration,
+)
 
 urlpatterns = [
+    # Eventos
     path('', lista_eventos, name='lista_eventos'),
-    path('evento/<int:evento_id>/', detalhes_evento, name='detalhes_evento'),
-    path('', views.event_list, name='lista_eventos'),
-    path('create/', views.create_event, name='create_event'),
-    path('<int:event_id>/edit/', views.edit_event, name='edit_event'),
-    path('<int:event_id>/', views.event_detail, name='detalhes_evento'),
-    path('registration/<int:registration_id>/edit/', views.edit_registration, name='edit_registration'),
-    path('registration/<int:registration_id>/delete/', views.delete_registration, name='delete_registration'),
+    path('evento/<int:id>/', detalhes_evento, name='detalhes_evento'),
+    path('evento/<int:id>/delete/', deletar_evento, name='deletar_evento'),
+    path('evento/<int:evento_id>/edit/', edit_event, name='edit_event'),
+
+    # Criação
+    path('create/', create_event, name='create_event'),
+
+    # Inscrições
+    path('inscricoes/', listar_inscricoes, name='listar_inscricoes'),
+    path('relatorio/inscricoes/', relatorio_inscricoes, name='relatorio_inscricoes'),
+    path('evento/<int:evento_id>/exportar_inscricoes/', exportar_inscricoes_csv, name='exportar_inscricoes_csv'),
+
+    # Registro de inscrições
+    path('registration/<int:registration_id>/edit/', edit_registration, name='edit_registration'),
+    path('registration/<int:registration_id>/delete/', delete_registration, name='delete_registration'),
 ]

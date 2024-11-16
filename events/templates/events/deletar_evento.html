@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cancelar Inscrição</title>
+    <title>Deletar Evento</title>
     <style>
         /* Estilos gerais */
         body {
@@ -17,90 +16,83 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            text-align: center;
         }
 
         .container {
-            background-color: #fff;
+            background-color: white;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 600px;
         }
 
-        h2 {
+        h1 {
             font-size: 2.5em;
-            color: #E53935;
-            text-align: center;
+            color: #e74c3c;
             margin-bottom: 20px;
         }
 
         p {
-            font-size: 1.1em;
-            text-align: center;
-            margin-bottom: 30px;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        p strong {
+            color: #333;
         }
 
         /* Estilos do formulário */
         form {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            margin-top: 20px;
         }
 
-        form button {
-            background-color: #E53935;
+        button {
+            background-color: #e74c3c;
             color: white;
             padding: 12px 25px;
             font-size: 1.1em;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
             width: 100%;
-            margin-top: 15px;
         }
 
-        form button:hover {
-            background-color: #d32f2f;
+        button:hover {
+            background-color: #c0392b;
         }
 
-        /* Estilo do link de navegação */
+        /* Link de cancelamento */
         a {
             display: inline-block;
             margin-top: 20px;
             font-size: 1.2em;
             color: #4CAF50;
             text-decoration: none;
-            text-align: center;
+            padding: 10px 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
         a:hover {
-            color: #45a049;
+            background-color: #4CAF50;
+            color: white;
         }
-
-        /* Estilo para campos de formulário */
-        .form-control {
-            margin-bottom: 15px;
-        }
-
     </style>
 </head>
-
 <body>
     <div class="container">
-        <h2>Cancelar Inscrição</h2>
-        <p>Tem certeza de que deseja cancelar sua inscrição para o evento <strong>"{{ registration.event.name }}"</strong>?</p>
-
+        <h1>Confirmar Exclusão</h1>
+        <p>Tem certeza de que deseja deletar o evento <strong>{{ evento.nome }}</strong>?</p>
         <form method="post">
             {% csrf_token %}
-            <button type="submit">Confirmar Cancelamento</button>
+            <button type="submit">Confirmar Exclusão</button>
         </form>
-
-        <a href="{% url 'detalhes_evento' registration.event.id %}">Voltar para o evento</a>
+        <a href="{% url 'lista_eventos' %}">Cancelar</a>
     </div>
 </body>
-
 </html>

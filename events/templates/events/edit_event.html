@@ -2,15 +2,150 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Evento</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Estilos do formulário */
+        form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilo do link de navegação */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #4CAF50;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        a:hover {
+            color: #45a049;
+        }
+
+        /* Estilo para os campos de formulário */
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .form-control label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-control input,
+        .form-control select,
+        .form-control textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .form-control input:focus,
+        .form-control select:focus,
+        .form-control textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+    </style>
 </head>
+
 <body>
-    <h2>Editar Evento</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar Alterações</button>
-    </form>
-    <a href="{% url 'lista_eventos' %}">Voltar para a Lista de Eventos</a>
+    <div class="container">
+        <h2>Editar Evento</h2>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-control">
+                <label for="id_nome">Nome do Evento</label>
+                <input type="text" id="id_nome" name="nome" value="{{ form.nome.value|default:'' }}">
+            </div>
+
+            <div class="form-control">
+                <label for="id_descricao">Descrição</label>
+                <textarea id="id_descricao" name="descricao" rows="5">{{ form.descricao.value|default:'' }}</textarea>
+            </div>
+
+            <div class="form-control">
+                <label for="id_data_inicio">Data de Início</label>
+                <input type="datetime-local" id="id_data_inicio" name="data_inicio" value="{{ form.data_inicio.value|default:'' }}">
+            </div>
+
+            <div class="form-control">
+                <label for="id_data_fim">Data de Fim</label>
+                <input type="datetime-local" id="id_data_fim" name="data_fim" value="{{ form.data_fim.value|default:'' }}">
+            </div>
+
+            <div class="form-control">
+                <label for="id_local">Local</label>
+                <input type="text" id="id_local" name="local" value="{{ form.local.value|default:'' }}">
+            </div>
+
+            <div class="form-control">
+                <label for="id_organizador">Organizador</label>
+                <input type="text" id="id_organizador" name="organizador" value="{{ form.organizador.value|default:'' }}">
+            </div>
+
+            <button type="submit" class="btn btn-green">Salvar Alterações</button>
+        </form>
+
+        <a href="{% url 'lista_eventos' %}">Voltar para a Lista de Eventos</a>
+    </div>
 </body>
 </html>

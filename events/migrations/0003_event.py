@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('end_date', models.DateTimeField(verbose_name='Data de Fim')),
                 ('description', models.TextField(blank=True, verbose_name='Descrição')),
                 ('location', models.CharField(max_length=255, verbose_name='Local')),
-                ('organizer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='organized_events', to=settings.AUTH_USER_MODEL, verbose_name='Organizador')),
+                ('organizador', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='organizador_events', to=settings.AUTH_USER_MODEL, verbose_name='Organizador')),
             ],
         ),
     ]
