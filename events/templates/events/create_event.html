@@ -1,16 +1,209 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Evento</title>
+    <style>
+        /* Resetando estilos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo do corpo */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow-x: hidden; /* Previne o overflow horizontal */
+        }
+
+        /* Estilo do container */
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        /* Estilo do título */
+        h2 {
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        /* Estilo do formulário */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Estilo de cada campo */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: block;
+            color: #333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            margin-top: 6px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        /* Estilo do botão */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Link para voltar */
+        a {
+            text-align: center;
+            display: block;
+            font-size: 1.1em;
+            color: #4CAF50;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #45a049;
+        }
+
+        /* Responsividade para telas menores */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 20px;
+                max-width: 90%; /* Faz o container ocupar 90% da tela */
+            }
+
+            h2 {
+                font-size: 1.6em; /* Reduz o tamanho do título em telas pequenas */
+            }
+
+            button {
+                font-size: 1em; /* Reduz o tamanho do botão em telas pequenas */
+            }
+
+            label, input, select, textarea {
+                font-size: 1em; /* Ajuste de fontes */
+            }
+        }
+
+        /* Ajuste para telas muito pequenas */
+        @media screen and (max-width: 480px) {
+            .container {
+                max-width: 95%; /* Container com 95% de largura */
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h2>Criar Evento</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
-    </form>
-    <a href="{% url 'lista_eventos' %}">Voltar para a Lista de Eventos</a>
+    <div class="container">
+        <h2>Criar Evento</h2>
+
+         {% if form.errors %}
+            <div class="error-messages">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <!-- Certifique-se de que o formulário está sendo renderizado aqui -->
+        <form method="post">
+            {% csrf_token %}
+            <!-- Campos do formulário -->
+            <div class="form-group">
+                <label for="{{ form.nome.id_for_label }}">{{ form.nome.label }}</label>
+                {{ form.nome }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.descricao.id_for_label }}">{{ form.descricao.label }}</label>
+                {{ form.descricao }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.data_inicio.id_for_label }}">{{ form.data_inicio.label }}</label>
+                {{ form.data_inicio }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.data_fim.id_for_label }}">{{ form.data_fim.label }}</label>
+                {{ form.data_fim }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.local.id_for_label }}">{{ form.local.label }}</label>
+                {{ form.local }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.organizador.id_for_label }}">{{ form.organizador.label }}</label>
+                {{ form.organizador }}
+            </div>
+
+            <!-- Botão de envio -->
+            <button type="submit">Salvar</button>
+        </form>
+
+        <!-- Link para voltar -->
+        <a href="{% url 'lista_eventos' %}">Voltar para a Lista de Eventos</a>
+    </div>
 </body>
+
 </html>

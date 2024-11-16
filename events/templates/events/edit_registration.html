@@ -1,16 +1,88 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Inscrição</title>
+    <style>
+        /* Estilos gerais para a página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form p {
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            margin-top: 15px;
+            font-size: 1em;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #45a049;
+        }
+    </style>
 </head>
+
 <body>
-    <h2>Editar Inscrição</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Atualizar Inscrição</button>
-    </form>
-    <a href="{% url 'detalhes_evento' registration.event.id %}">Voltar para o evento</a>
+    <div class="container">
+        <h2>Editar Inscrição</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Atualizar Inscrição</button>
+        </form>
+        <a href="{% url 'detalhes_evento' evento_id=registration.evento.id %}">Voltar para o evento</a>
+    </div>
 </body>
+
 </html>

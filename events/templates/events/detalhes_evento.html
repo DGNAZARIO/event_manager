@@ -1,39 +1,211 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Evento</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #4CAF50;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #4CAF50;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        p strong {
+            color: #333;
+        }
+
+        /* Estilos do formulário */
+        form {
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-green {
+            background-color: #4CAF50;
+        }
+
+        .btn-green:hover {
+            background-color: #45a049;
+        }
+
+        .btn-orange {
+            background-color: #f39c12;
+        }
+
+        .btn-red {
+            background-color: #e74c3c;
+        }
+
+        .btn-red:hover {
+            background-color: #c0392b;
+        }
+
+        /* Lista de inscrições e mensagens */
+        ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        ul li {
+            font-size: 1.1em;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        ul li:last-child {
+            border-bottom: none;
+        }
+
+        .messages {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .messages li {
+            list-style: none;
+            font-size: 1.1em;
+        }
+
+        /* Botões de ação para inscrições */
+        .action-buttons {
+            display: inline-flex;
+            gap: 5px;
+        }
+
+        /* Link voltar */
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #4CAF50;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .back-link:hover {
+            color: #45a049;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>{{ evento.nome }}</h1>
-    <p><strong>Data de Início:</strong> {{ evento.data_inicio|date:"d/m/Y H:i" }}</p>
-    <p><strong>Data de Fim:</strong> {{ evento.data_fim|date:"d/m/Y H:i" }}</p>
-    <p><strong>Descrição:</strong> {{ evento.descricao }}</p>
-    <p><strong>Local:</strong> {{ evento.local }}</p>
+    <div class="container">
+        <header>
+            <h1>{{ evento.nome }}</h1>
+        </header>
 
-    <h2>Inscreva-se neste evento</h2>
+        <main>
+            <p><strong>Data de Início:</strong> {{ evento.data_inicio|date:"d/m/Y H:i" }}</p>
+            <p><strong>Data de Fim:</strong> {{ evento.data_fim|date:"d/m/Y H:i" }}</p>
+            <p><strong>Descrição:</strong> {{ evento.descricao }}</p>
+            <p><strong>Local:</strong> {{ evento.local }}</p>
 
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+            <h2>Inscreva-se neste evento</h2>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Inscrever-se</button>
-    </form>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
-    <h2>Inscrições</h2>
-    <ul>
-        {% for inscricao in inscricoes %}
-            <li>{{ inscricao.nome_participante }} - {{ inscricao.email_participante }}</li>
-        {% endfor %}
-    </ul>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-green">Inscrever-se</button>
+            </form>
 
-    <a href="{% url 'lista_eventos' %}">Voltar para a lista de eventos</a>
+            <h2>Inscrições</h2>
+            <ul>
+                {% for inscricao in inscricoes %}
+                    <li>
+                        {{ inscricao.nome_participante }} - {{ inscricao.email_participante }}
+                        <div class="action-buttons">
+                            <!-- Editar inscrição -->
+                            <form method="post" action="{% url 'edit_registration' inscricao.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-orange">Editar</button>
+                            </form>
+
+
+                            <!-- Cancelar inscrição -->
+                            <form method="post" action="{% url 'delete_registration' inscricao.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-red">Cancelar Inscrição</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Link para deletar evento -->
+            <a href="{% url 'deletar_evento' evento.id %}" class="btn btn-red" style="display: block; text-align: center; margin-top: 20px;">Deletar Evento</a>
+
+            <!-- Link para voltar à lista de eventos -->
+            <a href="{% url 'lista_eventos' %}" class="back-link">Voltar para a lista de eventos</a>
+        </main>
+    </div>
 </body>
-</html>
 
+</html>

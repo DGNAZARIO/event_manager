@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'events',
+    'events.apps.EventsConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'event_manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,13 +120,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = '/events/'
 LOGOUT_REDIRECT_URL = 'login'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.seuprovedor.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'seu_email@example.com'
-EMAIL_HOST_PASSWORD = 'sua_senha'
-DEFAULT_FROM_EMAIL = 'seu_email@example.com'
+EMAIL_HOST_USER = 'diogonazariogomes7@gmail.com'
+EMAIL_HOST_PASSWORD = '010203040506070809'
+DEFAULT_FROM_EMAIL = 'diogonazariogomes7@gmail.com'
 
 
 

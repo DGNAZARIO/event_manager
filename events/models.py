@@ -1,43 +1,45 @@
+# events/models.py
 from django.db import models
 from django.contrib.auth.models import User
 
-
+# Modelo Evento
 class Evento(models.Model):
-    objects = None
     nome = models.CharField(max_length=200)
+    descricao = models.TextField()
     data_inicio = models.DateTimeField()
     data_fim = models.DateTimeField()
-    descricao = models.TextField()
     local = models.CharField(max_length=255)
+    organizador = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return self.nome
 
+    class Meta:
+        verbose_name = 'Evento'
+        verbose_name_plural = 'Eventos'
+        ordering = ['data_inicio']
+
+# Modelo Inscricao
 class Inscricao(models.Model):
-    objects = None
+    evento = models.ForeignKey('Evento', on_delete=models.CASCADE, related_name='inscricoes')
     nome_participante = models.CharField(max_length=200)
     email_participante = models.EmailField()
     data_inscricao = models.DateTimeField(auto_now_add=True)
-    evento = models.ForeignKey(Evento, on_delete=models.CASCADE, related_name='inscricoes')
-
-    class Meta:
-        unique_together = ('evento', 'email_participante')  # Garantir que o email seja único por evento
 
     def __str__(self):
         return f"{self.nome_participante} - {self.evento.nome}"
 
+    class Meta:
+        unique_together = ('evento', 'email_participante')
+        verbose_name = 'Inscrição'
+        verbose_name_plural = 'Inscrições'
+        ordering = ['data_inscricao']
 
-class Event:
-    pass
-
-
-class Event(models.Model):
-    name = models.CharField(max_length=200, verbose_name="Nome do Evento")
-    start_date = models.DateTimeField(verbose_name="Data de Início")
-    end_date = models.DateTimeField(verbose_name="Data de Fim")
-    description = models.TextField(blank=True, verbose_name="Descrição")
-    location = models.CharField(max_length=255, verbose_name="Local")
-    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="organized_events", verbose_name="Organizador")
+# Modelo Registration (corrigido)
+class Registration(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
+    status = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return f"{self.user} - {self.evento}"

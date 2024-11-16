@@ -19,12 +19,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import RedirectView
+from events import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('events/', include('events.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', RedirectView.as_view(url='/events/')),
+    path('evento/<int:evento_id>/', views.detalhes_evento, name='detalhes_evento'),
 ]
 
 
