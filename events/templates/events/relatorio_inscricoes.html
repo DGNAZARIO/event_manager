@@ -1,29 +1,145 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório de Inscrições</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .intro p {
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .export-btn, .back-btn {
+            padding: 12px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+
+        .export-btn:hover, .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-btn {
+            background-color: #4CAF50;
+        }
+
+        .back-btn:hover {
+            background-color: #45a049;
+        }
+
+    </style>
 </head>
+
 <body>
-    <h2>Relatório de Inscrições</h2>
-    <table border="1">
-        <tr>
-            <th>Evento</th>
-            <th>Total de Inscrições</th>
-        </tr>
-        {% for item in relatorio %}
-        <tr>
-            <td>{{ item.evento }}</td>
-            <td>{{ item.total_inscricoes }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="2">Nenhum dado disponível.</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <br>
-    <a href="?exportar=1">Exportar para CSV</a>
+    <header>
+        <h1>Relatório de Inscrições</h1>
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <p>Olá, <strong>{{ user.username }}</strong>!</p>
+
+            {% if user.is_staff %}
+            <p>Você está visualizando todos os relatórios como administrador.</p>
+            {% else %}
+            <p>Você está visualizando seu próprio relatório de inscrições.</p>
+            {% endif %}
+        </div>
+
+        <!-- Tabela de Relatórios -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome do Evento</th>
+                    <th>Total de Inscrições</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in relatorio %}
+                <tr>
+                    <td>{{ item.evento }}</td>
+                    <td>{{ item.total_inscricoes }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" style="text-align: center;">Nenhum relatório disponível.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Botões -->
+        <div class="button-container">
+            <a href="?exportar=1" class="export-btn">Exportar Relatório (CSV)</a>
+            <a href="{% url 'lista_eventos' %}" class="back-btn">Voltar para a Lista de Eventos</a>
+        </div>
+    </div>
 </body>
+
 </html>

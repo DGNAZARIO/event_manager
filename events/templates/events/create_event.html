@@ -2,15 +2,149 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Evento</title>
+    <style>
+        /* Reset básico de estilos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 40px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-control {
+            margin-bottom: 20px;
+        }
+
+        .form-control label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1em;
+            color: #555;
+        }
+
+        .form-control input,
+        .form-control textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border 0.3s;
+        }
+
+        .form-control input:focus,
+        .form-control textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .form-control textarea {
+            resize: vertical;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h2>Criar Evento</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
-    </form>
-    <a href="{% url 'lista_eventos' %}">Voltar para a Lista de Eventos</a>
+    <div class="container">
+        <h2>Criar Evento</h2>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-control">
+                <label for="id_nome">Nome do Evento</label>
+                <input type="text" id="id_nome" name="nome" value="{{ form.nome.value|default:'' }}" placeholder="Digite o nome do evento">
+            </div>
+
+            <div class="form-control">
+                <label for="id_descricao">Descrição</label>
+                <textarea id="id_descricao" name="descricao" rows="5" placeholder="Descreva o evento">{{ form.descricao.value|default:'' }}</textarea>
+            </div>
+
+            <div class="form-control">
+                <label for="id_data_inicio">Data de Início</label>
+                <input type="datetime-local" id="id_data_inicio" name="data_inicio" value="{{ form.data_inicio.value|default:'' }}">
+            </div>
+
+            <div class="form-control">
+                <label for="id_data_fim">Data de Fim</label>
+                <input type="datetime-local" id="id_data_fim" name="data_fim" value="{{ form.data_fim.value|default:'' }}">
+            </div>
+
+            <div class="form-control">
+                <label for="id_local">Local</label>
+                <input type="text" id="id_local" name="local" value="{{ form.local.value|default:'' }}" placeholder="Onde o evento ocorrerá?">
+            </div>
+
+            <div class="form-control">
+                <label for="id_organizador">Organizador</label>
+                <input type="text" id="id_organizador" name="organizador" value="{{ form.organizador.value|default:'' }}" placeholder="Quem está organizando o evento?">
+            </div>
+
+            <button type="submit">Salvar</button>
+        </form>
+        <a href="{% url 'lista_eventos' %}" class="back-link">Voltar para a Lista de Eventos</a>
+    </div>
 </body>
 </html>

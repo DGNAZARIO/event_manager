@@ -1,4 +1,6 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
+from . import views
 from .views import (
     lista_eventos,
     detalhes_evento,
@@ -30,4 +32,8 @@ urlpatterns = [
     # Registro de inscrições
     path('registration/<int:registration_id>/edit/', edit_registration, name='edit_registration'),
     path('registration/<int:registration_id>/delete/', delete_registration, name='delete_registration'),
+
+    path('registro/', views.registro, name='registro'),
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

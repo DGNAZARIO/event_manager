@@ -111,7 +111,9 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = TrueLANGUAGES = [
+    ('pt-br', 'Português do Brasil'),
+]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -127,7 +129,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'diogonazariogomes7@gmail.com'
 EMAIL_HOST_PASSWORD = '010203040506070809'
 DEFAULT_FROM_EMAIL = 'diogonazariogomes7@gmail.com'
-
+LANGUAGE_CODE = 'pt-br'
 
 
 # Default primary key field type

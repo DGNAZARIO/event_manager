@@ -1,35 +1,43 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from events.models import Registration
 from .forms import EventForm, InscricaoForm, RegistrationForm
 from events.models import Inscricao as Registration
 import csv
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from django.shortcuts import render
-from .models import Inscricao, Evento
+from .models import Inscricao
 from .forms import FiltroInscricaoForm
+from .forms import LoginForm
+from .models import Usuario
+from django.contrib.auth.hashers import check_password
+from django.shortcuts import  redirect
+from django.contrib import messages
+from .forms import RegistroForm
+from django.http import HttpResponseForbidden
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from .models import Evento, Relatorio
 
-
+@login_required
 def lista_eventos(request):
-    eventos = Evento.objects.all()
+    eventos = Evento.objects.filter(organizador=request.user)
     return render(request, 'events/lista_eventos.html', {'eventos': eventos})
 
-
+@login_required
 def detalhes_evento(request, evento_id):
     evento = get_object_or_404(Evento, id=evento_id)
-    inscricoes = evento.inscricoes.all()  # Obter todas as inscrições do evento
+    inscricoes = evento.inscricoes.all()
 
     if request.method == 'POST':
-        form = InscricaoForm(request.POST, evento=evento)  # Passando o evento para o formulário
+        form = InscricaoForm(request.POST, evento=evento)
         if form.is_valid():
             inscricao = form.save(commit=False)
-            inscricao.evento = evento  # Associando o evento à inscrição
+            inscricao.evento = evento
             inscricao.save()
             messages.success(request, "Inscrição realizada com sucesso!")
             return redirect('detalhes_evento', evento_id=evento.id)
     else:
-        form = InscricaoForm(evento=evento)  # Passando o evento para o formulário
+        form = InscricaoForm(evento=evento)
 
     return render(request, 'events/detalhes_evento.html', {
         'evento': evento,
@@ -39,17 +47,15 @@ def detalhes_evento(request, evento_id):
 
 @login_required
 def create_event(request):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("Você precisa estar logado para criar eventos.")
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
-            # Cria o evento sem salvar no banco ainda
             event = form.save(commit=False)
-            # Define o organizador do evento como o usuário logado
             event.organizador = request.user
-            # Agora salva o evento no banco de dados
             event.save()
-            # Redireciona para a lista de eventos ou para outra página
-            return redirect('lista_eventos')  # Ou para a página de detalhes do evento, conforme necessário
+            return redirect('lista_eventos')
     else:
         form = EventForm()
 
@@ -59,6 +65,10 @@ def create_event(request):
 @login_required
 def edit_event(request, evento_id):
     evento = get_object_or_404(Evento, id=evento_id, organizador=request.user)
+
+    if evento.organizador != request.user:
+        return HttpResponseForbidden("Você não tem permissão para editar este evento.")
+
     if request.method == 'POST':
         form = EventForm(request.POST, instance=evento)
         if form.is_valid():
@@ -68,13 +78,14 @@ def edit_event(request, evento_id):
         form = EventForm(instance=evento)
     return render(request, 'events/edit_event.html',  {'form': form, 'evento': evento})
 
+@login_required
 def register_participant(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()  # Salva a inscrição
+            form.save()
             messages.success(request, "Inscrição realizada com sucesso!")
-            return redirect('event_list')  # Redirecionar para a lista de eventos, por exemplo
+            return redirect('event_list')
     else:
         form = RegistrationForm()
     return render(request, 'events/register_participant.html', {'form': form})
@@ -83,16 +94,16 @@ def register_participant(request):
 @login_required
 def edit_registration(request, registration_id):
     registration = get_object_or_404(Registration, id=registration_id)
-    evento = registration.evento  # Pegue o evento da inscrição
+    evento = registration.evento
     form = RegistrationForm(instance=registration)
 
     if request.method == 'POST':
         form = RegistrationForm(request.POST, instance=registration)
         if form.is_valid():
             form.save()
-            if evento:  # Verifique se o evento existe
+            if evento:
                 messages.success(request, "Inscrição atualizada com sucesso.")
-                return redirect('detalhes_evento', evento_id=evento.id)  # Passando o evento.id correto
+                return redirect('detalhes_evento', evento_id=evento.id)
             else:
                 messages.error(request, "Evento não encontrado para a inscrição.")
         else:
@@ -100,7 +111,7 @@ def edit_registration(request, registration_id):
 
     return render(request, 'events/edit_registration.html', {'form': form, 'registration': registration})
 
-
+@login_required
 def delete_registration(request, registration_id):
     registration = get_object_or_404(Inscricao, id=registration_id)
 
@@ -120,12 +131,12 @@ def deletar_evento(request, id):
 
     if request.method == 'POST':
         evento.delete()
-        return redirect('lista_eventos')  # Redireciona após exclusão
+        return redirect('lista_eventos')
 
     return render(request, 'events/deletar_evento.html', {'evento': evento})
 
 
-# Função auxiliar para enviar e-mail
+
 def send_confirmation_email(registration, message):
     from django.core.mail import send_mail
     try:
@@ -168,16 +179,34 @@ def listar_inscricoes(request):
 
     return render(request, 'listar_inscricoes.html', {'form': form, 'inscricoes': inscricoes})
 
+def is_admin(user):
+    return user.is_superuser
+
+
+@login_required
 def relatorio_inscricoes(request):
-    eventos = Evento.objects.all()
-    relatorio = []
+    if request.user.is_staff:
+        relatorios = Relatorio.objects.all()
+    else:
 
-    for evento in eventos:
-        total_inscricoes = Inscricao.objects.filter(evento=evento).count()
-        relatorio.append({'evento': evento.nome, 'total_inscricoes': total_inscricoes})
+        relatorios = Relatorio.objects.filter(usuario=request.user)
 
-    return render(request, 'relatorio_inscricoes.html', {'relatorio': relatorio})
+    eventos = Evento.objects.filter(organizador=request.user).annotate(total_inscricoes=Count('inscricoes')) if not request.user.is_staff else Evento.objects.annotate(total_inscricoes=Count('inscricoes'))
 
+    relatorio = [{'evento': evento.nome, 'total_inscricoes': evento.total_inscricoes} for evento in eventos]
+
+    if request.GET.get('exportar') == '1':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="relatorio_inscricoes.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['Evento', 'Total de Inscrições'])
+        for item in relatorio:
+            writer.writerow([item['evento'], item['total_inscricoes']])
+
+        return response
+
+    return render(request, 'events/relatorio_inscricoes.html', {'relatorio': relatorio})
 
 def exportar_inscricoes_csv(request, evento_id):
     evento = Evento.objects.get(pk=evento_id)
@@ -192,3 +221,55 @@ def exportar_inscricoes_csv(request, evento_id):
         writer.writerow([inscricao.nome, inscricao.email, inscricao.data_inscricao])
 
     return response
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            try:
+                usuario = Usuario.objects.get(username=username)
+                if check_password(password, usuario.password):
+                    request.session['usuario_id'] = usuario.id
+                    return redirect('home')
+                else:
+                    form.add_error(None, "Senha incorreta.")
+            except Usuario.DoesNotExist:
+                form.add_error(None, "Usuário não encontrado.")
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
+def home_view(request):
+    usuario_id = request.session.get('usuario_id')
+    if usuario_id:
+        usuario = Usuario.objects.get(id=usuario_id)
+        return render(request, 'home.html', {'usuario': usuario})
+    else:
+        return redirect('login')
+
+def logout_view(request):
+    try:
+        del request.session['usuario_id']
+    except KeyError:
+        pass
+    return redirect('login')
+
+
+def registro(request):
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Conta criada com sucesso! Faça login.')
+            return redirect('login')
+        else:
+            messages.error(request, 'Por favor, corrija os erros abaixo.')
+    else:
+        form = RegistroForm()
+
+    return render(request, 'registration/registro.html', {'form': form})
